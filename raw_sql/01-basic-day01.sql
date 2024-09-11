@@ -18,14 +18,18 @@ USE hive_sql_zg5 ;
 -- todo: 1.1、简单查询
 -- 1）、检索课程编号为“04”且分数小于60的学生的课程信息，结果按分数降序排列；
 SELECT
-    stu_id, course_id, score
+    stu_id
+     , course_id
+     , score
 FROM hive_sql_zg5.score_info
 WHERE course_id='04' AND score<60
 ;
 
 -- 2）、查询数学成绩不及格的学生和其对应的成绩，按照学号升序排序；
 SELECT
-    *
+    stu_id
+     , course_id
+     , score
 FROM hive_sql_zg5.score_info
 WHERE score_info.course_id=(
     SELECT
