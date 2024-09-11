@@ -17,16 +17,41 @@ USE hive_sql_zg5 ;
 
 -- todo: 1.1、简单查询
 -- 1）、检索课程编号为“04”且分数小于60的学生的课程信息，结果按分数降序排列；
+SELECT
+    stu_id, course_id, score
+FROM hive_sql_zg5.score_info
+WHERE course_id='04' AND score<60
+;
 
 -- 2）、查询数学成绩不及格的学生和其对应的成绩，按照学号升序排序；
-
-
+SELECT
+    *
+FROM hive_sql_zg5.score_info
+WHERE score_info.course_id=(
+    SELECT
+        course_id
+    FROM hive_sql_zg5.course_info
+    WHERE course_name='数学'
+    ) AND score<60
+ORDER BY stu_id DESC
+;
 
 -- 3）、查询姓名中带“冰”的学生名单；
-
+SELECT
+    stu_id
+     , stu_name
+     , birthday
+     , sex
+FROM student_info
+WHERE stu_name LIKE '%冰%'
+;
 
 -- 4）、查询姓“王”老师的个数；
-
+SELECT
+    count(tea_id) as thr_con
+FROM hive_sql_zg5.teacher_info
+WHERE tea_name LIKE '王%'
+;
 
 -- todo：1.2、汇总分析
 /*
@@ -38,10 +63,19 @@ USE hive_sql_zg5 ;
 		min 最小
 */
 -- 1）、查询编号为“02”的课程的总成绩；
-
+SELECT
+    '02' as course_id
+    , sum(score) as sum_sco
+FROM hive_sql_zg5.score_info
+WHERE course_id='02'
+;
 
 
 -- 2）、查询参加考试的学生个数；
+SELECT
+    count(a.stu_id)
+FROM ( SELECT stu_id FROM score_info GROUP BY stu_id ) as a
+;
 
 -- todo 当数据量很大时，上述SQL容易产生数据倾斜，因为使用count distinct只有1个Reduce任务，采用group by + count优化
 /*
